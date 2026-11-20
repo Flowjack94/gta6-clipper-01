@@ -1,4 +1,10 @@
-import { copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  statSync,
+} from "node:fs";
 import { join, resolve } from "node:path";
 
 // Entrypoint for make.fun's gta6-clipper-01 bounty (node22 runtime).
@@ -46,6 +52,9 @@ function main(): void {
   }
   if (!existsSync(clipPath)) {
     throw new Error(`clip.mp4 not found at ${clipPath}`);
+  }
+  if (statSync(clipPath).size === 0) {
+    throw new Error(`clip.mp4 is empty at ${clipPath}`);
   }
   const raw = readFileSync(videoPath, "utf8");
   let parsed: unknown;
